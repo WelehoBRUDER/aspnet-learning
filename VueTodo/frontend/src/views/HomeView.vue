@@ -9,11 +9,19 @@ export default {
   }),
   methods: {
     addTodo() {
-      this.todos.push({
-        name: this.todoText,
-        isComplete: false,
-      });
-      this.todoText = "";
+      axios
+        .post("http://localhost:5100/todos", {
+          name: this.todoText,
+          isComplete: false,
+        })
+        .then((response) => {
+          console.log(response);
+        });
+      // this.todos.push({
+      //   name: this.todoText,
+      //   isComplete: false,
+      // });
+      // this.todoText = "";
     },
     removeTodo(index) {
       this.todos.splice(index, 1);
@@ -21,7 +29,6 @@ export default {
   },
   mounted: function () {
     axios.get("http://localhost:5100/todos").then((response) => {
-      console.log(response);
       this.todos = response.data;
     });
   },
@@ -34,6 +41,9 @@ export default {
       <h1 class="todos-title">{{ title }}</h1>
     </div>
     <div class="todos-body">
+      <div class="todos-list-title">
+        <h2 class="todos-list-title-text">My Todos</h2>
+      </div>
       <div class="todos-list">
         <div class="todos-item" v-for="(todo, index) in todos" :key="index">
           <div class="todos-item-text">
@@ -56,9 +66,7 @@ export default {
           placeholder="Add todo"
           v-model="todoText"
         />
-        <button class="todos-add-button" @click="addTodo">
-          <i class="fas fa-plus"></i>
-        </button>
+        <button class="todos-add-button" @click="addTodo">Add new todo</button>
       </div>
     </div>
   </div>
